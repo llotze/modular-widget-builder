@@ -22,7 +22,7 @@ export default function CustomTitleBar() {
         pointerEvents: "auto",
       }}
     >
-      <span className="font-bold text-white text-base">Modular Widget Builder</span>
+      <span className="font-bold text-white text-base">WIDGETIFY</span>
       <div className="flex gap-2" style={{ WebkitAppRegion: "no-drag" }}>
         {/* Debug/Dev Buttons */}
         {process.env.NODE_ENV === "development" && (
