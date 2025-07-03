@@ -127,10 +127,12 @@ export default function SignIn() {
         />
         {/* Foreground content */}
         <div className="relative z-10 flex flex-col items-center">
-          <h1 className="text-5xl font-bold text-gray-100 mb-4">Welcome.</h1>
+          <h1 className="text-5xl font-bold text-gray-100 mb-4">Welcome</h1>
+          <p className="text-lg text-gray-400 max-w-md text-center mb-0">
+            Build, customize, and manage your widgets locally or in the cloud.
+          </p>
           <p className="text-lg text-gray-400 max-w-md text-center mb-8">
-            Build, customize, and manage your widgets locally or in the cloud. No
-            account required!
+            No account needed for local saving. Sign in to sync with the cloud.
           </p>
         </div>
       </div>
