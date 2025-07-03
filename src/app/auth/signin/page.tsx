@@ -19,7 +19,7 @@ export default function SignIn() {
             <FaUser className="text-gray-500 text-2xl" />
           </div>
           <span className="text-gray-100 text-xl font-bold tracking-widest">
-            WIDGITIZE
+            WIDGETIZE
           </span>
         </div>
         {/* Avatar Icon */}
