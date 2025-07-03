@@ -1,4 +1,6 @@
 "use client";
+import { FiSettings } from "react-icons/fi";
+
 export default function CustomTitleBar() {
   // You need to expose window controls via Electron's preload script for production!
   const handleMinimize = () => window.electronAPI?.minimize?.();
@@ -41,7 +43,7 @@ export default function CustomTitleBar() {
               aria-label="DevTools"
               title="Open DevTools"
             >
-              <span style={{ fontSize: "1.2em", lineHeight: 1 }}>⚙️</span>
+              <FiSettings size={20} /> {/* Monochrome settings icon */}
             </button>
           </>
         )}
