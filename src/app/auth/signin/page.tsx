@@ -19,7 +19,7 @@ export default function SignIn() {
             <FaUser className="text-gray-500 text-2xl" />
           </div>
           <span className="text-gray-100 text-xl font-bold tracking-widest">
-            WIDGETIFY
+            WIDGITIZE
           </span>
         </div>
         {/* Avatar Icon */}
@@ -128,11 +128,8 @@ export default function SignIn() {
         {/* Foreground content */}
         <div className="relative z-10 flex flex-col items-center">
           <h1 className="text-5xl font-bold text-gray-100 mb-4">Welcome</h1>
-          <p className="text-lg text-gray-400 max-w-md text-center mb-0">
+          <p className="text-lg text-gray-400 max-w-md text-center ">
             Build, customize, and manage your widgets locally or in the cloud.
-          </p>
-          <p className="text-lg text-gray-400 max-w-md text-center mb-8">
-            No account needed for local saving. Sign in to sync with the cloud.
           </p>
         </div>
       </div>
