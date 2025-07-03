@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import { SignOutButton } from "./components/signout-button";
+import { SignOutButton } from "./components/SignoutButton";
 import Image from "next/image";
 
 export default async function Home() {
