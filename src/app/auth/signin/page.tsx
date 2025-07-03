@@ -42,7 +42,7 @@ export default function SignIn() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="pl-10 pr-3 py-2 rounded bg-[#1b1b1b] text-gray-100 border border-[#232329] focus:outline-none focus:border-gray-500 w-full transition"
+              className="pl-10 pr-3 py-2 rounded bg-[#1b1b1b] text-gray-100 border border-[#232329] hover:bg-[#161616] focus:outline-none focus:border-gray-500 focus:bg-[#161616] w-full transition"
             />
           </div>
           <div className="relative">
@@ -53,7 +53,7 @@ export default function SignIn() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="pl-10 pr-3 py-2 rounded bg-[#1b1b1b] text-gray-100 border border-[#232329] focus:outline-none focus:border-gray-500 w-full transition"
+              className="pl-10 pr-3 py-2 rounded bg-[#1b1b1b] text-gray-100 border border-[#232329] hover:bg-[#161616] focus:outline-none focus:border-gray-500 focus:bg-[#161616] w-full transition"
             />
           </div>
           <button
