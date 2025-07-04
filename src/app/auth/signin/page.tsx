@@ -100,13 +100,13 @@ export default function SignIn() {
             style={{
               border: "1px solid var(--color-border)",
               color: "var(--color-text-main)",
-              background: "var(--color-bg-section)",
+              background: "var(--color-button-base)",
               letterSpacing: "0.05em",
               fontSize: "1rem",
-              boxShadow: "0 1px 2px 0 #0000000d",
+              boxShadow: "0 1px 1px 0 #0000000d",
             }}
           >
-            LOGIN
+            Login
           </button>
         </form>
         {/* Extra options */}
@@ -135,13 +135,16 @@ export default function SignIn() {
           type="button"
           className="font-semibold py-2 rounded w-full transition-colors"
           style={{
-            border: "1px solid var(--color-bg-accent)",
-            color: "var(--color-text-muted)",
-            background: "var(--color-bg-section)",
-          }}
+              border: "1px solid var(--color-border)",
+              color: "var(--color-text-muted)",
+              background: "var(--color-button-base)",
+              letterSpacing: "0.05em",
+              fontSize: "1rem",
+              boxShadow: "0 1px 1px 0 #0000000d",
+            }}
           onClick={() => signIn("google", { callbackUrl: "/" })}
         >
-          Sign in with Google
+          Login with Google
         </button>
         {/* Create Account */}
         <div className="flex items-center gap-1 mt-4 text-sm">
