@@ -1,7 +1,33 @@
 "use client";
+import { useEffect, useState } from "react";
 import { FiSettings } from "react-icons/fi";
 
 export default function CustomTitleBar() {
+  // Always start as false to match SSR, then update on client
+  const [dark, setDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem("theme");
+    if (saved) {
+      setDark(saved === "dark");
+    } else {
+      setDark(window.matchMedia("(prefers-color-scheme: dark)").matches);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    if (dark) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [dark, mounted]);
+
   // You need to expose window controls via Electron's preload script for production!
   const handleMinimize = () => window.electronAPI?.minimize?.();
   const handleMaximize = () => window.electronAPI?.maximize?.();
@@ -22,10 +48,22 @@ export default function CustomTitleBar() {
         left: 0,
         zIndex: 50,
         pointerEvents: "auto",
-      }}
+      } as any}
     >
       <span className="font-bold text-white text-base">WIDGETIZE</span>
-      <div className="flex gap-2" style={{ WebkitAppRegion: "no-drag" }}>
+      <div className="flex gap-2" style={{ WebkitAppRegion: "no-drag" } as any}>
+        {/* Theme Toggle */}
+        <label className="flex items-center cursor-pointer mr-2">
+          <input
+            type="checkbox"
+            checked={dark}
+            onChange={() => setDark((d) => !d)}
+            style={{ accentColor: "#888", marginRight: 4 }}
+          />
+          <span style={{ color: "#fff", fontSize: 12 }}>
+            {dark ? "🌙" : "☀️"}
+          </span>
+        </label>
         {/* Debug/Dev Buttons */}
         {process.env.NODE_ENV === "development" && (
           <>
