@@ -144,28 +144,34 @@ export default function SignIn() {
           Sign in with Google
         </button>
         {/* Create Account */}
-        <button
-          type="button"
-          className="mt-4 text-sm transition-colors"
-          style={{
-            background: "none",
-            border: "none",
-            padding: 0,
-            cursor: "pointer",
-            color: "var(--color-text-muted)",
-          }}
-          onClick={() => router.push("/auth/register")}
-        >
-          Not a member?{" "}
-          <span
-            className="underline transition-colors"
-            style={{ cursor: "pointer", borderRadius: 4, padding: "0 2px" }}
-            onMouseOver={e => (e.currentTarget.style.background = "var(--color-bg-accent)")}
-            onMouseOut={e => (e.currentTarget.style.background = "none")}
+        <div className="flex items-center gap-1 mt-4 text-sm">
+          <div
+            style={{
+              color: "var(--color-text-muted)",
+              userSelect: "none",
+            }}
           >
-            Sign up now
-          </span>
-        </button>
+            Not a member?
+          </div>
+          <div>
+            <span
+              className="underline signup-hover"
+              style={{
+                cursor: "pointer",
+                borderRadius: 4,
+                padding: "0 2px",
+                transition: "background 0.2s",
+                display: "inline-block",
+                color: "var(--color-text-muted)",
+              }}
+              onClick={() => router.push("/auth/register")}
+              onMouseOver={e => (e.currentTarget.style.background = "var(--color-bg-accent)")}
+              onMouseOut={e => (e.currentTarget.style.background = "none")}
+            >
+              Sign up now
+            </span>
+          </div>
+        </div>
       </div>
       {/* Right: Welcome Splash */}
       <div

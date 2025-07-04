@@ -39,7 +39,7 @@ export default function CustomTitleBar() {
 
   return (
     <div
-      className="flex items-center justify-between w-full h-10 px-4 py-0 select-none"
+      className="titlebar flex items-center justify-between w-full h-10 px-4 py-0 select-none"
       style={{
         WebkitAppRegion: "drag",
         background: "transparent",
@@ -50,7 +50,9 @@ export default function CustomTitleBar() {
         pointerEvents: "auto",
       } as any}
     >
-      <span className="font-bold text-white text-base">WIDGETIZE</span>
+      <span className="font-bold text-base text-black dark:text-white">
+        WIDGETIZE
+      </span>
       <div className="flex gap-2" style={{ WebkitAppRegion: "no-drag" } as any}>
         {/* Theme Toggle */}
         <label className="flex items-center cursor-pointer mr-2">
@@ -60,7 +62,7 @@ export default function CustomTitleBar() {
             onChange={() => setDark((d) => !d)}
             style={{ accentColor: "#888", marginRight: 4 }}
           />
-          <span style={{ color: "#fff", fontSize: 12 }}>
+          <span className="text-black dark:text-white" style={{ fontSize: 12 }}>
             {dark ? "🌙" : "☀️"}
           </span>
         </label>
@@ -69,7 +71,7 @@ export default function CustomTitleBar() {
           <>
             <button
               onClick={handleReload}
-              className="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 text-white text-lg transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 text-black dark:text-white text-lg transition-colors"
               aria-label="Reload"
               title="Reload"
             >
@@ -77,7 +79,7 @@ export default function CustomTitleBar() {
             </button>
             <button
               onClick={handleDevTools}
-              className="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 text-white text-lg transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 text-black dark:text-white text-lg transition-colors"
               aria-label="DevTools"
               title="Open DevTools"
             >
@@ -88,21 +90,21 @@ export default function CustomTitleBar() {
         {/* Window Controls */}
         <button
           onClick={handleMinimize}
-          className="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 text-white text-lg transition-colors"
+          className="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 text-black dark:text-white text-lg transition-colors"
           aria-label="Minimize"
         >
           <span style={{ fontSize: "1.2em", lineHeight: 1 }}>─</span>
         </button>
         <button
           onClick={handleMaximize}
-          className="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 text-white text-lg transition-colors"
+          className="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 text-black dark:text-white text-lg transition-colors"
           aria-label="Maximize"
         >
           <span style={{ fontSize: "1.0em", lineHeight: 1 }}>☐</span>
         </button>
         <button
           onClick={handleClose}
-          className="w-8 h-8 flex items-center justify-center rounded hover:bg-red-600 text-white text-lg transition-colors"
+          className="w-8 h-8 flex items-center justify-center rounded hover:bg-red-600 text-black dark:text-white text-lg transition-colors"
           aria-label="Close"
         >
           <span style={{ fontSize: "1.5em", lineHeight: 1 }}>×</span>

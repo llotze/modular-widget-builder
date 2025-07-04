@@ -9,29 +9,26 @@
   --color-text-muted: #555;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg-main: #1b1b1b;
-    --color-bg-section: #161616;
-    --color-bg-accent: #232329;
-    --color-border: #232329;
-    --color-text-main: #ededed;
-    --color-text-muted: #888;
-    --color-btn-hover: #232329;
-    --color-btn-lighten: #252525;
-  }
-
-  button:not([style*="background: none"]):hover,
-  button:not([style*="background: none"]):focus {
-    background: var(--color-btn-lighten, #252525) !important;
-  }
+/* DARK MODE OVERRIDES - use .dark class instead of media query */
+.dark {
+  --color-bg-main: #1b1b1b;
+  --color-bg-section: #161616;
+  --color-bg-accent: #232329;
+  --color-border: #232329;
+  --color-text-main: #ededed;
+  --color-text-muted: #888;
+  --color-btn-hover: #232329;
+  --color-btn-lighten: #252525;
 }
 
-@media (prefers-color-scheme: light) {
-  button:not([style*="background: none"]):hover,
-  button:not([style*="background: none"]):focus {
-    background: var(--color-bg-accent) !important;
-  }
+.dark button:not([style*="background: none"]):hover,
+.dark button:not([style*="background: none"]):focus {
+  background: var(--color-btn-lighten, #252525) !important;
+}
+
+button:not([style*="background: none"]):hover,
+button:not([style*="background: none"]):focus {
+  background: var(--color-bg-accent) !important;
 }
 
 body {
@@ -64,6 +61,13 @@ button {
 button:not([style*="background: none"]):hover,
 button:not([style*="background: none"]):focus {
   background: var(--color-bg-accent);
+}
+
+.titlebar, .titlebar * {
+  color: #000 !important;
+}
+.dark .titlebar, .dark .titlebar * {
+  color: #fff !important;
 }
 
 
