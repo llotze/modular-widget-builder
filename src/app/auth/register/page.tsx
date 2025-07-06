@@ -10,12 +10,38 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const router = useRouter();
+
+  function validateEmail(email: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+    setEmailError("");
+    setPasswordError("");
+
+    let hasError = false;
+
+    if (!email) {
+      setEmailError("Email is required");
+      hasError = true;
+    } else if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      hasError = true;
+    }
+
+    if (!password) {
+      setPasswordError("Password is required");
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    setLoading(true);
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,6 +111,7 @@ export default function Register() {
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-4 w-full"
+          noValidate
         >
           <div className="relative">
             <FaUser
@@ -109,11 +136,13 @@ export default function Register() {
               style={{ color: "var(--color-text-muted)" }}
             />
             <input
-              type="email"
+              type="text"
               placeholder="Gmail"
               value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
+              onChange={e => {
+                setEmail(e.target.value);
+                if (emailError) setEmailError("");
+              }}
               className="pl-10 pr-3 py-2 rounded border w-full transition"
               style={{
                 color: "var(--color-text-main)",
@@ -121,6 +150,7 @@ export default function Register() {
               }}
             />
           </div>
+          {emailError && <div className="text-red-500 text-sm">{emailError}</div>}
           <div className="relative">
             <FaLock
               className="absolute left-3 top-1/2 -translate-y-1/2"
@@ -130,8 +160,10 @@ export default function Register() {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
+              onChange={e => {
+                setPassword(e.target.value);
+                if (passwordError) setPasswordError("");
+              }}
               className="pl-10 pr-3 py-2 rounded border w-full transition"
               style={{
                 color: "var(--color-text-main)",
@@ -139,6 +171,7 @@ export default function Register() {
               }}
             />
           </div>
+          {passwordError && <div className="text-red-500 text-sm">{passwordError}</div>}
           {error && <div className="text-red-500 text-sm">{error}</div>}
           <button
             type="submit"

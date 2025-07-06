@@ -7,7 +7,14 @@ import { FaUser, FaLock } from "react-icons/fa";
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [formError, setFormError] = useState("");
   const router = useRouter();
+
+  function validateEmail(email: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
 
   return (
     <div
@@ -54,9 +61,34 @@ export default function SignIn() {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-            await signIn("credentials", { email, password, callbackUrl: "/" });
+            setEmailError("");
+            setPasswordError("");
+            setFormError("");
+
+            let hasError = false;
+
+            if (!email) {
+              setEmailError("Email is required.");
+              hasError = true;
+            } else if (!validateEmail(email)) {
+              setEmailError("Please enter a valid email address");
+              hasError = true;
+            }
+
+            if (!password) {
+              setPasswordError("Password is required");
+              hasError = true;
+            }
+
+            if (hasError) return;
+
+            const res = await signIn("credentials", { email, password, callbackUrl: "/", redirect: false });
+            if (res?.error) {
+              setFormError("Invalid credentials or failed to sign in");
+            }
           }}
           className="flex flex-col gap-4 w-full"
+          noValidate
         >
           <div className="relative">
             <FaUser
@@ -64,11 +96,13 @@ export default function SignIn() {
               style={{ color: "var(--color-text-muted)" }}
             />
             <input
-              type="email"
+              type="text"
               placeholder="Username"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (emailError) setEmailError("");
+              }}
               className="pl-10 pr-3 py-2 rounded border w-full transition"
               style={{
                 color: "var(--color-text-main)",
@@ -76,6 +110,7 @@ export default function SignIn() {
               }}
             />
           </div>
+          {emailError && <div className="text-red-500 text-sm">{emailError}</div>}
           <div className="relative">
             <FaLock
               className="absolute left-3 top-1/2 -translate-y-1/2"
@@ -85,8 +120,10 @@ export default function SignIn() {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (passwordError) setPasswordError("");
+              }}
               className="pl-10 pr-3 py-2 rounded border w-full transition"
               style={{
                 color: "var(--color-text-main)",
@@ -94,6 +131,8 @@ export default function SignIn() {
               }}
             />
           </div>
+          {passwordError && <div className="text-red-500 text-sm">{passwordError}</div>}
+          {formError && <div className="text-red-500 text-sm">{formError}</div>}
           <button
             type="submit"
             className="font-semibold py-2 rounded mt-2 transition-colors"
