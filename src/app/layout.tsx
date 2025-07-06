@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import CustomTitleBar from "./components/CustomTitleBar";
+import ReactQueryProvider from "./components/ReactQueryProvider"; // <-- import the provider
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,11 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
-      >
-        <CustomTitleBar />
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased `}>
+        <ReactQueryProvider>
+          <CustomTitleBar />
+          {children}
+        </ReactQueryProvider>
       </body>
     </html>
   );

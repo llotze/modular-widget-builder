@@ -1,33 +1,22 @@
 "use client";
 import { useEffect, useState } from "react";
 import { FiSettings } from "react-icons/fi";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+// Dummy implementations for demonstration. Replace with your real API calls.
+async function fetchThemeFromCloud() {
+  // Simulate fetching from cloud
+  return localStorage.getItem("theme") || "light";
+}
+
+async function updateThemeOnCloud(newTheme: "light" | "dark") {
+  // Simulate saving to cloud
+  localStorage.setItem("theme", newTheme);
+  return newTheme;
+}
+
 
 export default function CustomTitleBar() {
-  // Always start as false to match SSR, then update on client
-  const [dark, setDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const saved = localStorage.getItem("theme");
-    if (saved) {
-      setDark(saved === "dark");
-    } else {
-      setDark(window.matchMedia("(prefers-color-scheme: dark)").matches);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    if (dark) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [dark, mounted]);
-
   // You need to expose window controls via Electron's preload script for production!
   const handleMinimize = () => window.electronAPI?.minimize?.();
   const handleMaximize = () => window.electronAPI?.maximize?.();
@@ -36,6 +25,36 @@ export default function CustomTitleBar() {
   // Debug/dev tools (only show in development)
   const handleReload = () => window.location.reload();
   const handleDevTools = () => window.electronAPI?.openDevTools?.();
+
+  // React Query for theme
+
+  const queryClient = useQueryClient();
+  const { data: theme = "light", isLoading } = useQuery({
+    queryKey: ["theme"],
+    queryFn: fetchThemeFromCloud,
+    initialData: "light",
+  });
+
+  const mutation = useMutation({
+    mutationFn: updateThemeOnCloud,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["theme"] }),
+  });
+
+  // When toggling theme:
+  const handleThemeToggle = () => {
+    mutation.mutate(theme === "dark" ? "light" : "dark");
+  };
+
+  // Set the dark class on <html> when theme changes
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [theme]);
 
   return (
     <div
@@ -55,17 +74,52 @@ export default function CustomTitleBar() {
       </span>
       <div className="flex gap-2" style={{ WebkitAppRegion: "no-drag" } as any}>
         {/* Theme Toggle */}
-        <label className="flex items-center cursor-pointer mr-2">
-          <input
-            type="checkbox"
-            checked={dark}
-            onChange={() => setDark((d) => !d)}
-            style={{ accentColor: "#888", marginRight: 4 }}
-          />
-          <span className="text-black dark:text-white" style={{ fontSize: 12 }}>
-            {dark ? "🌙" : "☀️"}
+        <button
+          onClick={handleThemeToggle}
+          aria-label="Toggle dark mode"
+          className="relative w-10 h-6 rounded-full transition-colors mt-1 duration-200 focus:outline-none"
+          style={{
+            background: theme === "dark" ? "#232329" : "#e0e0e0",
+            border: "1px solid #bdbdbd",
+            minWidth: 40,
+            minHeight: 24,
+            padding: 0,
+          }}
+        >
+          <span
+            className="absolute left-0 top-0 h-full flex items-center pl-1 text-xs transition-colors"
+            style={{
+              color: theme === "dark" ? "#fff" : "#000",
+              opacity: theme === "dark" ? 0 : 1,
+              transition: "opacity 0.2s",
+            }}
+          >
+            ☀️
           </span>
-        </label>
+          <span
+            className="absolute right-0 top-0 h-full flex items-center pr-1 text-xs transition-colors"
+            style={{
+              color: theme === "dark" ? "#fff" : "#000",
+              opacity: theme === "dark" ? 1 : 0,
+              transition: "opacity 0.2s",
+            }}
+          >
+            🌙
+          </span>
+          <span
+            className="absolute top-1/2 left-1 transition-transform duration-200"
+            style={{
+              transform: `translateY(-50%) translateX(${theme === "dark" ? "12px" : "0px"})`,
+              width: 18,
+              height: 18,
+              borderRadius: "50%",
+              background: theme === "dark" ? "#fff" : "#000",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.15)",
+              border: "1px solid #bdbdbd",
+              display: "block",
+            }}
+          />
+        </button>
         {/* Debug/Dev Buttons */}
         {process.env.NODE_ENV === "development" && (
           <>

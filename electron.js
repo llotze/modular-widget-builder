@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const installExtension = require('electron-devtools-installer');
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
@@ -27,6 +28,13 @@ function createWindow() {
   waitForServer("http://localhost:3000", () => {
     win.loadURL("http://localhost:3000");
   });
+
+  // Install React DevTools in development mode
+  if (process.env.NODE_ENV === "development") {
+    installExtension.default(installExtension.REACT_DEVELOPER_TOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
+  }
 }
 
 app.whenReady().then(createWindow);
