@@ -53,17 +53,12 @@ export default function Register() {
       setError(data.error || "Failed to create account");
       return;
     }
-    // Automatically sign in after registration
-    const signInRes = await signIn("credentials", {
+    // Automatically sign in after registration and let NextAuth handle redirect
+    await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      callbackUrl: "/",
     });
-    if (signInRes?.ok) {
-      router.push("/");
-    } else {
-      setError("Account created, but failed to sign in. Please try logging in.");
-    }
   };
 
   return (

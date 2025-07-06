@@ -82,10 +82,8 @@ export default function SignIn() {
 
             if (hasError) return;
 
-            const res = await signIn("credentials", { email, password, callbackUrl: "/", redirect: false });
-            if (res?.error) {
-              setFormError("Invalid credentials or failed to sign in");
-            }
+            // Let NextAuth handle the redirect
+            await signIn("credentials", { email, password, callbackUrl: "/" });
           }}
           className="flex flex-col gap-4 w-full"
           noValidate
