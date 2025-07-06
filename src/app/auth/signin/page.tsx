@@ -106,7 +106,7 @@ export default function SignIn() {
               className="pl-10 pr-3 py-2 rounded border w-full transition"
               style={{
                 color: "var(--color-text-main)",
-                borderColor: "var(--color-bg-accent)",
+                borderColor: emailError ? "#ef4444" : "var(--color-bg-accent)", // red-500 if error
               }}
             />
           </div>
@@ -127,7 +127,7 @@ export default function SignIn() {
               className="pl-10 pr-3 py-2 rounded border w-full transition"
               style={{
                 color: "var(--color-text-main)",
-                borderColor: "var(--color-bg-accent)",
+                borderColor: passwordError ? "#ef4444" : "var(--color-bg-accent)", // red-500 if error
               }}
             />
           </div>
