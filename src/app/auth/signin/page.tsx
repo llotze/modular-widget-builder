@@ -1,6 +1,6 @@
 "use client";
+import React, { useState } from "react"; // <-- FIXED: import React!
 import { signIn } from "next-auth/react";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaUser, FaLock } from "react-icons/fa";
 
@@ -10,11 +10,19 @@ export default function SignIn() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [formError, setFormError] = useState("");
+  const [showShimmer, setShowShimmer] = useState(true);
   const router = useRouter();
 
   function validateEmail(email: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
+
+  // Remove shimmer after animation duration (5s
+  React.useEffect(() => {
+    if (!showShimmer) return;
+    const timeout = setTimeout(() => setShowShimmer(false), 1500); // match your animation duration
+    return () => clearTimeout(timeout);
+  }, [showShimmer]);
 
   return (
     <div
@@ -215,7 +223,10 @@ export default function SignIn() {
       </div>
       {/* Right: Welcome Splash */}
       <div
-        className="hidden md:flex flex-1 flex-col justify-center items-center relative overflow-hidden"
+        className={
+          "hidden md:flex flex-1 flex-col justify-center items-center relative overflow-hidden " +
+          (showShimmer ? "circuit-bg-shimmer-once" : "")
+        }
         style={{ background: "var(--color-bg-section)" }}
       >
         {/* Background PNG with opacity */}

@@ -72,4 +72,73 @@ button:not([style*="background: none"]):focus {
   color: #fff !important;
 }
 
+/* Add to your globals.css or a component CSS file */
+.circuit-bg-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Techy multi-pulse shimmer */
+.circuit-bg-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Multiple small white "modules" as repeating pulses */
+  background: repeating-linear-gradient(
+    120deg,
+    transparent 0%,
+    transparent 10%,
+    rgba(255,255,255,0.85) 12%,
+    rgba(255,255,255,0.85) 16%,
+    transparent 18%,
+    transparent 28%
+  );
+  opacity: 0.7;
+  background-size: 450% 300%;
+  animation: circuit-modules-shimmer 5s linear infinite;
+  -webkit-mask-image: url('/welcomebg.png');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-image: url('/welcomebg.png');
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  z-index: 1;
+}
+
+.circuit-bg-shimmer-once::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    120deg,
+    transparent 0%,
+    transparent 10%,
+    rgba(255,255,255,0.85) 12%,
+    rgba(255,255,255,0.85) 16%,
+    transparent 18%,
+    transparent 28%
+  );
+  opacity: 0.7;
+  background-size: 450% 400%;
+  animation: circuit-modules-shimmer 2s linear 1; /* Only once */
+  -webkit-mask-image: url('/welcomebg.png');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-image: url('/welcomebg.png');
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  z-index: 1;
+}
+
+@keyframes circuit-modules-shimmer {
+  0% {
+    background-position: 25% 0;
+  }
+  100% {
+    background-position: 93% 0;
+  }
+}
+
 
