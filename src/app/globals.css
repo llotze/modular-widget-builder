@@ -121,7 +121,7 @@ button:not([style*="background: none"]):focus {
     transparent 28%
   );
   opacity: 0.7;
-  background-size: 450% 450%;
+  background-size: 450% 550%;
   animation: circuit-modules-shimmer 2s linear 1; /* Only once */
   -webkit-mask-image: url('/welcomebg.png');
   -webkit-mask-repeat: no-repeat;
@@ -137,7 +137,7 @@ button:not([style*="background: none"]):focus {
     background-position: 23% 0;
   }
   100% {
-    background-position: 95% 0;
+    background-position: 105% 0;
   }
 }
 
