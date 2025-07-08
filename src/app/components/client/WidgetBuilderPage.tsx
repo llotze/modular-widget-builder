@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { SignOutButton } from "../SignoutButton";
 
 export default function WidgetBuilderPage({ email }: { email: string }) {
-
+  const router = useRouter();
 
   return (
     <div className="relative min-h-screen bg-[var(--color-bg-main)] p-8">
@@ -27,7 +28,6 @@ export default function WidgetBuilderPage({ email }: { email: string }) {
           mx-auto
         "
       >
-
         {/* Add Widget Card */}
         <div
           className="
@@ -43,6 +43,7 @@ export default function WidgetBuilderPage({ email }: { email: string }) {
             select-none
             group
           "
+          onClick={() => router.push("/editor")}
         >
           <span
             className="

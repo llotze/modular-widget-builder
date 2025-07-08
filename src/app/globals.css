@@ -8,6 +8,7 @@
   --color-text-main: #171717;
   --color-text-muted: #555;
   --color-button-base: #f7f7f7;
+  --color-grid-major: #dadada; /* subtle gray for light mode */
 }
 
 /* DARK MODE OVERRIDES - use .dark class instead of media query */
@@ -21,6 +22,7 @@
   --color-btn-hover: #232329;
   --color-btn-lighten: #252525;
   --color-button-base: #161616;
+  --color-grid-major: rgba(33, 33, 33, 0.91); /* strong dark for dark mode */
 }
 
 .dark button:not([style*="background: none"]):hover,
