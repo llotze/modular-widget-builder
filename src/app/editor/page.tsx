@@ -179,6 +179,17 @@ export default function WidgetBuilderCanvas() {
     // eslint-disable-next-line
   }, []);
 
+  React.useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      onWheel(e as any); // or adapt your onWheel to accept native events
+    };
+    grid.addEventListener("wheel", handleWheel, { passive: false });
+    return () => grid.removeEventListener("wheel", handleWheel);
+  }, []);
+
   return (
     <div
       className="relative min-h-screen w-full overflow-hidden"
@@ -225,7 +236,6 @@ export default function WidgetBuilderCanvas() {
             userSelect: "none",
           }}
           onMouseDown={onMouseDown}
-          onWheel={onWheel}
         />
         {/* Debug info */}
         <div
