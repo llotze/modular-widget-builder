@@ -25,13 +25,11 @@
   --color-grid-major: rgba(33, 33, 33, 0.91); /* strong dark for dark mode */
 }
 
-.dark button:not([style*="background: none"]):hover,
-.dark button:not([style*="background: none"]):focus {
+.dark button:not([style*="background: none"]):hover {
   background: var(--color-btn-lighten, #252525) !important;
 }
 
-button:not([style*="background: none"]):hover,
-button:not([style*="background: none"]):focus {
+button:not([style*="background: none"]):hover {
   background: var(--color-bg-accent) !important;
 }
 
@@ -53,8 +51,7 @@ button {
 }
 
 /* Only darken buttons that have a background (not text buttons) */
-button:not([style*="background: none"]):hover,
-button:not([style*="background: none"]):focus {
+button:not([style*="background: none"]):hover {
   background: var(--color-bg-accent);
 }
 
