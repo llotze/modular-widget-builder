@@ -7,7 +7,7 @@ export default function WidgetBuilderPage({ email }: { email: string }) {
   const router = useRouter();
 
   return (
-    <div className="relative min-h-screen bg-[var(--color-bg-main)] p-8">
+    <div className="relative min-h-screen bg-[var(--color-bg-section)] p-8">
       {/* Top Section */}
       <div className="flex flex-col items-center gap-2 mb-8">
         <p className="text-lg" style={{ color: "var(--color-text-muted)" }}>
@@ -36,7 +36,7 @@ export default function WidgetBuilderPage({ email }: { email: string }) {
             rounded-lg
             border
             border-[var(--color-border)]
-            bg-[var(--color-bg-section)]
+            bg-[var(--color-bg-main)]
             transition-transform
             hover:-translate-y-1
             cursor-pointer

@@ -309,7 +309,7 @@ export default function WidgetBuilderCanvas() {
         </ul>
         <div className="flex-grow" />
         <button
-          className="m-4 mt-auto px-4 py-2 rounded bg-[var(--color-bg-accent)] text-[var(--color-text-main)] border border-[var(--color-border)] hover:bg-[var(--color-border)] transition"
+          className="m-4 mt-auto px-4 py-2 rounded bg-[var(--color-button-base)] text-[var(--color-text-main)] border border-[var(--color-border)] hover:bg-[var(--color-btn-lighten)] transition"
           onClick={() => router.push("/")}
         >
           Return to Dashboard
