@@ -134,7 +134,7 @@ button:not([style*="background: none"]):focus {
 
 @keyframes circuit-modules-shimmer {
   0% {
-    background-position: 23% 0;
+    background-position: 40% 0;
   }
   100% {
     background-position: 105% 0;
