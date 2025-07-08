@@ -1,7 +1,12 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { DndProvider, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import ToolboxTopbar from "../components/ToolboxTopbar";
+import PropertiesSidebar from "../components/PropertiesSidebar";
+import CustomDragLayer from "../components/CustomDragLayer";
+import Moveable from "react-moveable";
 
 const TOOLBOX_ITEMS = [
   { type: "text", label: "Text" },
@@ -14,6 +19,12 @@ export default function WidgetBuilderCanvas() {
   const [zoom, setZoom] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const [debugOffset, setDebugOffset] = useState({ x: 0, y: 0 });
+  const [textProps, setTextProps] = useState({ text: "Sample Text", color: "#222222" });
+  const [widgets, setWidgets] = useState<
+    { id: string; type: string; x: number; y: number; props: any }[]
+  >([]);
+  const [selectedWidgetId, setSelectedWidgetId] = useState<string | null>(null);
+  const [widgetRects, setWidgetRects] = useState<Record<string, { width: number; height: number }>>({});
 
   const gridRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef({ x: 0, y: 0 });
@@ -181,143 +192,233 @@ export default function WidgetBuilderCanvas() {
     // eslint-disable-next-line
   }, []);
 
-  return (
-    <div
-      className="relative min-h-screen w-full overflow-hidden"
-      style={{ background: "var(--color-bg-main)", color: "var(--color-text-main)" }}
-    >
-      {/* Toolbox Topbar */}
+  // Drop target for grid
+  function GridDropLayer({ children }: { children: React.ReactNode }) {
+    const [{ isOver }, drop] = useDrop({
+      accept: "TOOLBOX_ITEM",
+      drop: (item: { type: string }, monitor) => {
+        const offset = monitor.getClientOffset();
+        if (!offset || !gridRef.current) return;
+        // Calculate grid-relative position
+        const gridRect = gridRef.current.getBoundingClientRect();
+        const x = (offset.x - gridRect.left - debugOffset.x) / zoom;
+        const y = (offset.y - gridRect.top - debugOffset.y) / zoom;
+        // Only support text for now
+        if (item.type === "text") {
+          setWidgets((prev) => [
+            ...prev,
+            {
+              id: Math.random().toString(36).slice(2),
+              type: "text",
+              x,
+              y,
+              props: { ...textProps },
+            },
+          ]);
+        }
+      },
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+      }),
+    });
+    return (
       <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          zIndex: 20, // very high to guarantee visibility
+        ref={(node) => {
+          drop(node);
         }}
+        style={{ width: "100%", height: "100%", position: "relative" }}
       >
-        <ToolboxTopbar
-          items={TOOLBOX_ITEMS}
-          selectedTool={selectedTool}
-          setSelectedTool={setSelectedTool}
-          onReturn={() => router.push("/")}
-        />
+        {children}
       </div>
+    );
+  }
 
-      {/* Infinite Grid Canvas */}
+  return (
+    <DndProvider backend={HTML5Backend}>
       <div
-        tabIndex={0}
-        className="absolute left-0 right-0 z-0 select-none"
-        style={{
-          top: "3.5rem", // height of ToolboxTopbar (py-3 + px-6), adjust if needed
-          width: "100vw",
-          height: "calc(100vh - 3.5rem)",
-        }}
+        className="relative min-h-screen w-full overflow-hidden"
+        style={{ background: "var(--color-bg-main)", color: "var(--color-text-main)" }}
       >
-        <div
-          ref={gridRef}
-          className={isDragging ? "cursor-grabbing" : "cursor-grab"}
-          style={{
-            width: `${GRID_SIZE}px`,
-            height: `${GRID_SIZE}px`,
-            position: "absolute",
-            top: `calc(50% - ${GRID_SIZE / 2}px)`,
-            left: `calc(50% - ${GRID_SIZE / 2}px)`,
-            transform: `translate(${debugOffset.x}px, ${debugOffset.y}px) scale(${zoom}) translateZ(0)`,
-            willChange: "transform",
-            backgroundImage: `
-              linear-gradient(to right, var(--color-border) 1px, transparent 1px),
-              linear-gradient(to bottom, var(--color-border) 1px, transparent 1px),
-              linear-gradient(to right, var(--color-grid-major) 2px, transparent 2px),
-              linear-gradient(to bottom, var(--color-grid-major) 2px, transparent 2px)
-            `,
-            backgroundSize: `
-              40px 40px,
-              40px 40px,
-              160px 160px,
-              160px 160px
-            `,
-            backgroundColor: "var(--color-bg-section)",
-            transition: "background-color 0.2s",
-            pointerEvents: "auto",
-            opacity: 1,
-            userSelect: "none",
-          }}
-          onMouseDown={onMouseDown}
-          onWheel={onWheel}
-        />
-        {/* Debug info */}
+        {/* Toolbox Topbar */}
         <div
           style={{
-            position: "absolute",
-            bottom: 10,
-            left: 14,
-            background: "#000a",
-            color: "#fff",
-            padding: 8,
-            borderRadius: 8,
-            fontSize: 12,
-            zIndex: 100,
-            pointerEvents: "none",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            zIndex: 20, // very high to guarantee visibility
           }}
         >
-          <div>
-            offset: {`{"x":${Math.round(debugOffset.x)},"y":${Math.round(debugOffset.y)}}`}
-          </div>
-          <div>zoom: {Math.round(zoom * 10) / 10}</div>
+          <ToolboxTopbar
+            items={TOOLBOX_ITEMS}
+            selectedTool={selectedTool}
+            setSelectedTool={setSelectedTool}
+            onReturn={() => router.push("/")}
+          />
         </div>
 
-        {/* Recenter button */}
-        <button
+        {/* Infinite Grid Canvas */}
+        <div
+          tabIndex={0}
+          className="absolute left-0 right-0 z-0 select-none"
           style={{
-            position: "absolute",
-            bottom: 20,
-            right: 20,
-            zIndex: 101,
-            background: "#222",
-            color: "#fff",
-            border: "none",
-            borderRadius: 6,
-            padding: "10px 18px",
-            fontWeight: 600,
-            cursor: "pointer",
-            boxShadow: "0 2px 8px #0003",
-          }}
-          onClick={() => {
-            const center = centerOffsetForZoom(zoom);
-            offsetRef.current = center;
-            if (gridRef.current) {
-              gridRef.current.style.transform = `translate(${center.x}px, ${center.y}px) scale(${zoom}) translateZ(0)`;
-            }
-            setDebugOffset(center);
+            top: "3.5rem", // height of ToolboxTopbar (py-3 + px-6), adjust if needed
+            width: "100vw",
+            height: "calc(100vh - 3.5rem)",
           }}
         >
-          Recenter
-        </button>
-      </div>
-
-      {/* Properties Panel (fixed right) */}
-      {selectedTool && (
-        <aside
-          className="fixed top-0 right-0 h-full w-66 border-l z-10"
-          style={{
-            background: "var(--color-bg-main)", // lighter than grid for dark mode
-            borderColor: "var(--color-border)",
-          }}
-        >
-          <div className="p-4 mt-30 font-bold text-lg" style={{ color: "var(--color-text-main)" }}>
-            Properties
+          <div
+            ref={gridRef}
+            className={isDragging ? "cursor-grabbing" : "cursor-grab"}
+            style={{
+              width: `${GRID_SIZE}px`,
+              height: `${GRID_SIZE}px`,
+              position: "absolute",
+              top: `calc(50% - ${GRID_SIZE / 2}px)`,
+              left: `calc(50% - ${GRID_SIZE / 2}px)`,
+              transform: `translate(${debugOffset.x}px, ${debugOffset.y}px) scale(${zoom}) translateZ(0)`,
+              willChange: "transform",
+              backgroundImage: `
+                linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--color-border) 1px, transparent 1px),
+                linear-gradient(to right, var(--color-grid-major) 2px, transparent 2px),
+                linear-gradient(to bottom, var(--color-grid-major) 2px, transparent 2px)
+              `,
+              backgroundSize: `
+                40px 40px,
+                40px 40px,
+                160px 160px,
+                160px 160px
+              `,
+              backgroundColor: "var(--color-bg-section)",
+              transition: "background-color 0.2s",
+              pointerEvents: "auto",
+              opacity: 1,
+              userSelect: "none",
+            }}
+            onMouseDown={onMouseDown}
+            onWheel={onWheel}
+          >
+            <GridDropLayer>
+              {/* Render all dropped widgets */}
+              {widgets.map((w) =>
+                w.type === "text" ? (
+                  <React.Fragment key={w.id}>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: w.x,
+                        top: w.y,
+                        color: w.props.color,
+                        fontSize: "2rem",
+                        fontWeight: 600,
+                        pointerEvents: "auto",
+                        userSelect: "none",
+                        transform: "translate(-50%, -50%)",
+                        width: widgetRects[w.id]?.width ?? 200,
+                        height: widgetRects[w.id]?.height ?? 40,
+                        display: "inline-block",
+                        background: selectedWidgetId === w.id ? "rgba(0,0,0,0.03)" : undefined,
+                        border: selectedWidgetId === w.id ? "1.5px solid #0070f3" : undefined,
+                        borderRadius: 4,
+                        boxSizing: "border-box",
+                        cursor: "pointer",
+                      }}
+                      onClick={e => {
+                        e.stopPropagation();
+                        setSelectedWidgetId(w.id);
+                      }}
+                      id={`widget-${w.id}`}
+                    >
+                      {w.props.text}
+                    </span>
+                    {selectedWidgetId === w.id && (
+                      <Moveable
+                        target={document.getElementById(`widget-${w.id}`)}
+                        draggable={true}
+                        resizable={true}
+                        onDrag={({ left, top }) => {
+                          setWidgets(ws =>
+                            ws.map(widget =>
+                              widget.id === w.id ? { ...widget, x: left, y: top } : widget
+                            )
+                          );
+                        }}
+                        onResize={({ width, height }) => {
+                          setWidgetRects(rects => ({
+                            ...rects,
+                            [w.id]: { width, height },
+                          }));
+                        }}
+                        keepRatio={false}
+                        throttleResize={1}
+                        edge={false}
+                      />
+                    )}
+                  </React.Fragment>
+                ) : null
+              )}
+            </GridDropLayer>
           </div>
-          <div className="p-4 text-[var(--color-text-muted)]">
+          {/* Debug info */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: 10,
+              left: 14,
+              background: "#000a",
+              color: "#fff",
+              padding: 8,
+              borderRadius: 8,
+              fontSize: 12,
+              zIndex: 100,
+              pointerEvents: "none",
+            }}
+          >
             <div>
-              <div className="font-semibold mb-2">
-                {TOOLBOX_ITEMS.find((i) => i.type === selectedTool)?.label} Settings
-              </div>
-              <div className="text-sm">Widget configuration options will appear here.</div>
+              offset: {`{"x":${Math.round(debugOffset.x)},"y":${Math.round(debugOffset.y)}}`}
             </div>
+            <div>zoom: {Math.round(zoom * 10) / 10}</div>
           </div>
-        </aside>
-      )}
-    </div>
+
+          {/* Recenter button */}
+          <button
+            style={{
+              position: "absolute",
+              bottom: 20,
+              right: 20,
+              zIndex: 101,
+              background: "#222",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              padding: "10px 18px",
+              fontWeight: 600,
+              cursor: "pointer",
+              boxShadow: "0 2px 8px #0003",
+            }}
+            onClick={() => {
+              const center = centerOffsetForZoom(zoom);
+              offsetRef.current = center;
+              if (gridRef.current) {
+                gridRef.current.style.transform = `translate(${center.x}px, ${center.y}px) scale(${zoom}) translateZ(0)`;
+              }
+              setDebugOffset(center);
+            }}
+          >
+            Recenter
+          </button>
+        </div>
+
+        {/* Properties Sidebar */}
+        <PropertiesSidebar
+          selectedTool={selectedTool}
+          textProps={textProps}
+          setTextProps={setTextProps}
+        />
+        {/* Custom Drag Preview */}
+        <CustomDragLayer textProps={textProps} />
+      </div>
+    </DndProvider>
   );
 }
