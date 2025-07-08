@@ -312,7 +312,7 @@ export default function WidgetBuilderCanvas() {
           className="m-4 mt-auto px-4 py-2 rounded bg-[var(--color-bg-accent)] text-[var(--color-text-main)] border border-[var(--color-border)] hover:bg-[var(--color-border)] transition"
           onClick={() => router.push("/")}
         >
-          Return to Main Page
+          Return to Dashboard
         </button>
       </aside>
 
