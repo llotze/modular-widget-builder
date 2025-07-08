@@ -38,13 +38,13 @@ export default function WidgetBuilderCanvas() {
 
     // X axis: minX logic (already implemented)
     const baseZoomX = 0.7;
-    const baseMinX = -2898;
+    const baseMinX = -2908;
     const perStepX = 500;
     const stepsX = Math.round((zoomValue - baseZoomX) / 0.1);
     const minX = baseMinX - perStepX * stepsX;
 
     // X axis: maxX logic (new, as requested)
-    const baseMaxX = 2898;
+    const baseMaxX = 2908;
     const maxX = baseMaxX + perStepX * stepsX;
 
     // Y axis: minY logic (already implemented)
@@ -179,17 +179,6 @@ export default function WidgetBuilderCanvas() {
     // eslint-disable-next-line
   }, []);
 
-  React.useEffect(() => {
-    const grid = gridRef.current;
-    if (!grid) return;
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      onWheel(e as any); // or adapt your onWheel to accept native events
-    };
-    grid.addEventListener("wheel", handleWheel, { passive: false });
-    return () => grid.removeEventListener("wheel", handleWheel);
-  }, []);
-
   return (
     <div
       className="relative min-h-screen w-full overflow-hidden"
@@ -236,13 +225,14 @@ export default function WidgetBuilderCanvas() {
             userSelect: "none",
           }}
           onMouseDown={onMouseDown}
+          onWheel={onWheel} // <-- Add this line back
         />
         {/* Debug info */}
         <div
           style={{
             position: "absolute",
             bottom: 10,
-            left: 10,
+            left: 14,
             background: "#000a",
             color: "#fff",
             padding: 8,
@@ -289,9 +279,9 @@ export default function WidgetBuilderCanvas() {
 
       {/* Toolbox (fixed left) */}
       <aside
-        className="fixed top-0 left-0 h-full w-48 border-r z-10"
+        className="fixed top-0 left-0 h-full w-50 border-r z-10"
         style={{
-          background: "var(--color-bg-section)",
+          background: "var(--color-bg-main)", // lighter than grid for dark mode
           borderColor: "var(--color-border)",
         }}
       >
@@ -320,9 +310,9 @@ export default function WidgetBuilderCanvas() {
 
       {/* Properties Panel (fixed right) */}
       <aside
-        className="fixed top-0 right-0 h-full w-64 border-l z-10"
+        className="fixed top-0 right-0 h-full w-66 border-l z-10"
         style={{
-          background: "var(--color-bg-section)",
+          background: "var(--color-bg-main)", // lighter than grid for dark mode
           borderColor: "var(--color-border)",
         }}
       >
