@@ -5,8 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Dummy implementations for demonstration. Replace with your real API calls.
 async function fetchThemeFromCloud() {
-  // Simulate fetching from cloud
-  return localStorage.getItem("theme") || "light";
+  return localStorage.getItem("theme") || "dark";
 }
 
 async function updateThemeOnCloud(newTheme: "light" | "dark") {
@@ -14,7 +13,6 @@ async function updateThemeOnCloud(newTheme: "light" | "dark") {
   localStorage.setItem("theme", newTheme);
   return newTheme;
 }
-
 
 export default function CustomTitleBar() {
   // You need to expose window controls via Electron's preload script for production!
@@ -27,12 +25,11 @@ export default function CustomTitleBar() {
   const handleDevTools = () => window.electronAPI?.openDevTools?.();
 
   // React Query for theme
-
   const queryClient = useQueryClient();
-  const { data: theme = "light", isLoading } = useQuery({
+  const { data: theme = "dark", isLoading } = useQuery({
     queryKey: ["theme"],
     queryFn: fetchThemeFromCloud,
-    initialData: "light",
+    initialData: "dark",
   });
 
   const mutation = useMutation({
