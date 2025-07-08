@@ -46,15 +46,6 @@ input, textarea {
   transition: background 0.2s;
 }
 
-input:hover, input:focus,
-textarea:hover, textarea:focus {
-  background: var(--color-bg-section);
-}
-
-input:focus, button:focus, textarea:focus, select:focus {
-  outline: 2px solid #898989;
-  outline-offset: 2px;
-}
 
 button {
   cursor: pointer;

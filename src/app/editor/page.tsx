@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import ToolboxTopbar from "../components/ToolboxTopbar";
 
 const TOOLBOX_ITEMS = [
   { type: "text", label: "Text" },
@@ -185,15 +186,32 @@ export default function WidgetBuilderCanvas() {
       className="relative min-h-screen w-full overflow-hidden"
       style={{ background: "var(--color-bg-main)", color: "var(--color-text-main)" }}
     >
+      {/* Toolbox Topbar */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          zIndex: 20, // very high to guarantee visibility
+        }}
+      >
+        <ToolboxTopbar
+          items={TOOLBOX_ITEMS}
+          selectedTool={selectedTool}
+          setSelectedTool={setSelectedTool}
+          onReturn={() => router.push("/")}
+        />
+      </div>
+
       {/* Infinite Grid Canvas */}
       <div
         tabIndex={0}
-        className="absolute inset-0 z-0 select-none"
+        className="absolute left-0 right-0 z-0 select-none"
         style={{
-          left: "12rem",
-          right: "16rem",
-          width: `calc(100vw - 12rem - 16rem)`,
-          height: "100vh",
+          top: "3.5rem", // height of ToolboxTopbar (py-3 + px-6), adjust if needed
+          width: "100vw",
+          height: "calc(100vh - 3.5rem)",
         }}
       >
         <div
@@ -226,7 +244,7 @@ export default function WidgetBuilderCanvas() {
             userSelect: "none",
           }}
           onMouseDown={onMouseDown}
-          onWheel={onWheel} // <-- Add this line back
+          onWheel={onWheel}
         />
         {/* Debug info */}
         <div
@@ -278,66 +296,28 @@ export default function WidgetBuilderCanvas() {
         </button>
       </div>
 
-      {/* Toolbox (fixed left) */}
-      <aside
-        className="fixed top-0 left-0 h-full w-50 border-r z-10 flex flex-col"
-        style={{
-          background: "var(--color-bg-main)", // lighter than grid for dark mode
-          borderColor: "var(--color-border)",
-        }}
-      >
-        <div className="p-4 mt-10 font-bold text-lg" style={{ color: "var(--color-text-main)" }}>
-          Toolbox
-        </div>
-        <ul>
-          {TOOLBOX_ITEMS.map((item) => (
-            <li
-              key={item.type}
-              className={`px-4 py-2 cursor-pointer rounded transition-colors mb-1 ${
-                selectedTool === item.type
-                  ? "bg-[var(--color-bg-accent)]"
-                  : "hover:bg-[var(--color-bg-accent)]"
-              }`}
-              style={{
-                color: "var(--color-text-main)",
-              }}
-              onClick={() => setSelectedTool(item.type)}
-            >
-              {item.label}
-            </li>
-          ))}
-        </ul>
-        <div className="flex-grow" />
-        <button
-          className="m-4 mt-auto px-4 py-2 rounded bg-[var(--color-button-base)] text-[var(--color-text-main)] border border-[var(--color-border)] hover:bg-[var(--color-btn-lighten)] transition"
-          onClick={() => router.push("/")}
-        >
-          Return to Dashboard
-        </button>
-      </aside>
-
       {/* Properties Panel (fixed right) */}
-      <aside
-        className="fixed top-0 right-0 h-full w-66 border-l z-10"
-        style={{
-          background: "var(--color-bg-main)", // lighter than grid for dark mode
-          borderColor: "var(--color-border)",
-        }}
-      >
-        <div className="p-4 mt-10 font-bold text-lg" style={{ color: "var(--color-text-main)" }}>
-          Properties
-        </div>
-        <div className="p-4 text-[var(--color-text-muted)]">
-          {selectedTool ? (
+      {selectedTool && (
+        <aside
+          className="fixed top-0 right-0 h-full w-66 border-l z-10"
+          style={{
+            background: "var(--color-bg-main)", // lighter than grid for dark mode
+            borderColor: "var(--color-border)",
+          }}
+        >
+          <div className="p-4 mt-30 font-bold text-lg" style={{ color: "var(--color-text-main)" }}>
+            Properties
+          </div>
+          <div className="p-4 text-[var(--color-text-muted)]">
             <div>
-              <div className="font-semibold mb-2">{TOOLBOX_ITEMS.find((i) => i.type === selectedTool)?.label} Settings</div>
+              <div className="font-semibold mb-2">
+                {TOOLBOX_ITEMS.find((i) => i.type === selectedTool)?.label} Settings
+              </div>
               <div className="text-sm">Widget configuration options will appear here.</div>
             </div>
-          ) : (
-            <div className="text-sm">Select a widget from the toolbox to edit its properties.</div>
-          )}
-        </div>
-      </aside>
+          </div>
+        </aside>
+      )}
     </div>
   );
 }
