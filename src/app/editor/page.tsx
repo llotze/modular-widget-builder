@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
-
+import { useRouter } from "next/navigation";
 
 const TOOLBOX_ITEMS = [
   { type: "text", label: "Text" },
@@ -17,6 +17,7 @@ export default function WidgetBuilderCanvas() {
   const gridRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef({ x: 0, y: 0 });
   const dragStartRef = useRef<{ x: number; y: number } | null>(null);
+  const router = useRouter();
 
   const GRID_SIZE = 10000 + 2 * 40; // Add 2 columns (right) and 2 rows (bottom), each 40px
 
@@ -279,7 +280,7 @@ export default function WidgetBuilderCanvas() {
 
       {/* Toolbox (fixed left) */}
       <aside
-        className="fixed top-0 left-0 h-full w-50 border-r z-10"
+        className="fixed top-0 left-0 h-full w-50 border-r z-10 flex flex-col"
         style={{
           background: "var(--color-bg-main)", // lighter than grid for dark mode
           borderColor: "var(--color-border)",
@@ -306,6 +307,13 @@ export default function WidgetBuilderCanvas() {
             </li>
           ))}
         </ul>
+        <div className="flex-grow" />
+        <button
+          className="m-4 mt-auto px-4 py-2 rounded bg-[var(--color-bg-accent)] text-[var(--color-text-main)] border border-[var(--color-border)] hover:bg-[var(--color-border)] transition"
+          onClick={() => router.push("/")}
+        >
+          Return to Main Page
+        </button>
       </aside>
 
       {/* Properties Panel (fixed right) */}
