@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react"; // <-- FIXED: import React!
+import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FaUser, FaLock } from "react-icons/fa";
@@ -26,12 +26,20 @@ export default function SignIn() {
 
   return (
     <div
-      className="min-h-screen flex"
+      className="min-h-screen flex flex-col md:flex-row"
       style={{ background: "var(--color-bg-main)" }}
     >
       {/* Left: Sign In Form */}
       <div
-        className="flex flex-col justify-center items-center w-full max-w-md px-8 py-12 z-10"
+        className="
+          flex flex-col justify-center items-center
+          w-full
+          min-w-[300px]
+          max-w-full
+          md:max-w-md
+          px-8 py-12 z-10
+          flex-1
+        "
         style={{
           background: "var(--color-bg-main)",
           borderRight: "1px solid var(--color-border)",

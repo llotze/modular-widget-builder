@@ -1,7 +1,7 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 
 export default function Register() {
@@ -12,11 +12,18 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showShimmer, setShowShimmer] = useState(true);
   const router = useRouter();
 
   function validateEmail(email: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
+
+  React.useEffect(() => {
+    if (!showShimmer) return;
+    const timeout = setTimeout(() => setShowShimmer(false), 1500); // match your animation duration
+    return () => clearTimeout(timeout);
+  }, [showShimmer]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,12 +70,20 @@ export default function Register() {
 
   return (
     <div
-      className="min-h-screen flex"
+      className="min-h-screen flex flex-col md:flex-row"
       style={{ background: "var(--color-bg-main)" }}
     >
       {/* Left: Register Form */}
       <div
-        className="flex flex-col justify-center items-center w-full max-w-md px-8 py-12 z-10"
+        className="
+          flex flex-col justify-center items-center
+          w-full
+          min-w-[300px]
+          max-w-full
+          md:max-w-md
+          px-8 py-12 z-10
+          flex-1
+        "
         style={{
           background: "var(--color-bg-main)",
           borderRight: "1px solid var(--color-border)",
@@ -237,7 +252,10 @@ export default function Register() {
       </div>
       {/* Right: Welcome Splash */}
       <div
-        className="hidden md:flex flex-1 flex-col justify-center items-center relative overflow-hidden"
+        className={
+          "hidden md:flex flex-1 flex-col justify-center items-center relative overflow-hidden " +
+          (showShimmer ? "circuit-bg-shimmer-once" : "")
+        }
         style={{ background: "var(--color-bg-section)" }}
       >
         {/* Background PNG with opacity */}
